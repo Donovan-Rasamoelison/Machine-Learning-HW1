@@ -1,0 +1,168 @@
+---
+title: "Donovan_HW1_code"
+date: "2022-09-29"
+output: 
+  html_document:
+   toc: true
+   toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Donovan Rasamoelison - PSTAT 231 - HW1
+
+## Short answers
+
+### Question 1
+Supervised Learning is a machine learning model with the outcome variable y known. 
+
+Unsupervised Learning is a machine learning model with the outcome variable y unknown. 
+
+### Question 2
+A regression model is a supervised learning model with a quantitative outcome variable y.
+
+A classification model is a supervised learning model with a qualitative outcome variable y.
+
+### Question 3
+Two commonly used metrics for a regression model are the training MSE and the test MSE.
+
+Two commonly used metrics for a classification model are the training error rate and the test error rate.
+
+### Question 4
+Descriptive models: are type of models used to best visually emphasize a trend in data, such as using boxplot and scatterplot.
+
+Inferential models: aim to predict test theories. The goal of these models is to state the relationship between the outcome and the predictor(s), which can possibly be causal. Inferential models focus on mainly on hypothesis testing.
+
+Predictive models: aim to predict the outcome variable y with minimum reducible error. Predictive models do not focus on hypothesis testing.
+
+### Question 5
+
+A mechanistic and an empirically-driven model differ in how they estimate the true functional form f.
+
+A mechanistic model assumes a parametric functional form to the data. The functional form will not match the true unknown function. On the other hand, an empirically-driven model does not assume a parametric functional form. Instead, empirically-driven models build an estimate of the true f that gets as close as possible to the to the data points.
+
+In general, a mechanistic model is easier to understand and to interpret than an empirically-driven model. The mechanistic model reduces the estimation of the true functional form f down to simply estimating a a set of finite parameters. The assumption of the true functional form in the mechanistic model simplifies the interpretation of the model.
+
+According to ISLR (P35), more flexible methods have higher variance and lower bias. Therefore, since the mechanistic models are less flexible than the empirically-driven models,  mechanistic models have less variance but higher bias compared to empirically-driven models.
+
+### Question 6
+How likely is it that voters will vote in favor of the candidate?: This question is a predictive question because the goal of the study will be to predict the probability that a voter will vote for the candidate. 
+
+How would a voter's likelihood of support for the candidate change if they had personal contact with the candidate? This question is an inferential question because it seeks to find the causal relationship between the effect of the voter meeting the candidate on the  voter's probability of voting for the candidate. 
+
+## Exploratory data analysis
+
+### Exercise 1: 
+
+```{r, echo = TRUE, message = F, warning = F}
+library(tidyverse)
+library(ggplot2)
+
+mpg = tibble(mpg)
+
+ggplot(data = mpg, aes(x = hwy)) +
+  geom_histogram(fill = 'blue', binwidth = 3)+
+  xlab("Highway miles per gallon")+
+  labs(title="Histogram of the Highway miles per gallon variable")+
+  theme_minimal()
+```
+
+The histogram shows that there are some outliers that use more than 40 milles per gallons on highgways. Below 40, the distribution seems fairly evenly distributed.
+
+### Exercise 2: 
+
+```{r, echo = TRUE, message = F, warning = F}
+ggplot(data = mpg, aes(x = hwy , y = cty))+
+  geom_point() + 
+  xlab("Highway miles per gallon")+
+  ylab("City miles per gallon")+
+  labs(title = "City Vs Highway miles per gallon")+
+  theme_classic()
+
+```
+
+
+The graph shows a positive relationship between city and highway miles per gallon. This means a positive correlation between the two variables, so when highway miles per gallon increases, city miles per gallon is likely to increase (Just a positive relationship, not causal)
+
+
+### Exercise 3: 
+
+```{r, echo = TRUE, message = F, warning = F}
+library(forcats)
+ggplot(data = mpg, aes(y = fct_reorder(as_factor(manufacturer), manufacturer,.fun='length'))) +
+  geom_bar(fill = 'blue')+
+  ylab("Manufacturer") +
+  xlab("Number of car sold")
+
+```
+
+From the graph above, we can see that Dodge sold the most number of cars and Lincoln sold the least number of cars.
+
+### Exercise 4: 
+
+```{r, echo = TRUE, message = F, warning = F}
+ggplot(data = mpg, aes(x = as.factor(cyl), y = hwy))+
+  geom_boxplot()+
+  ylab("Highway miles per gallon")+
+  xlab("Number of cylinders")
+
+```
+
+There is a pattern. There is a negative relationship between the number of cylinders and highway miles per gallon. The higher is the number of cylinders, the lower is highway miles per gallon.
+
+```{r, echo = TRUE, message = F, warning = F}
+library(corrplot)
+
+corrplot(cor(mpg %>% select(cty,hwy,displ,year,cyl,)), method='number', order='AOE', type='lower')
+
+```
+The positive and negative correlation between the variables are shown in the graph. In general, the relationship between the variables makes sense. For instance, year and the number of cylinders and year and the engine displacement (displ) are positively correlated. This makes sense because the later is the year of manufacturing, the more powerful is the car, hence the higher number of cylinders and engine displacement. 
+
+The negative correlation between cylinders and the highway (or city) miles per gallon is a bit surprising. The higher is the cylinders, the more powerful is the car, so I expect the car to spend more fuel, however, the data shows that the is more fuel efficient.
+
+## 231 students only
+
+### Excercise 6
+
+```{r, echo = TRUE, message = F, warning = F}
+library(ggthemes)
+ggplot(data = mpg, aes(x = hwy, y=class)) +
+  geom_jitter(color = 'gray88') +
+  geom_boxplot() +
+  theme_gdocs()
+```
+
+### Excercise 7
+
+```{r, echo = TRUE, message = F, warning = F}
+ggplot(data = mpg, aes(x = class, y = hwy , fill = drv)) +
+  geom_boxplot()
+
+```
+
+### Excercise 8
+
+```{r, echo = TRUE, message = F, warning = F}
+ggplot(data=mpg, aes(x = displ, y = hwy , fill = drv, colour = drv)) +
+  geom_point()+
+  geom_smooth(method = loess , se = FALSE, aes(linetype = drv) , color = 'blue')
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
